@@ -46,34 +46,34 @@ jobs:
         run: ./etc/ci/bencher.py filesize target/release/servo --bmf-output size.json
       - name: Speedometer
         run: |
-            python3 ./mach test-speedometer -r --bmf-output speedometer.json
+          python3 ./mach test-speedometer -r --bmf-output speedometer.json
       - name: Dromaeo
         run: |
-            python3 ./mach test-dromaeo -r dom --bmf-output dromaeo.json
+          python3 ./mach test-dromaeo -r dom --bmf-output dromaeo.json
       # set options
       - name: Set bencher opts for PRs (label try run)
         if: github.event_name == 'pull_request_target'
         run: |
-            echo "RUN_BENCHER_OPTIONS=--branch ${{ github.event.number }}/PR \
-            --branch-start-point ${{ github.base_ref }} \
-            --branch-start-point-hash ${{ github.event.pull_request.base.sha }} \
-            --branch-reset \
-            --github-actions ${{ secrets.GITHUB_TOKEN }}" >> "$GITHUB_ENV"
+          echo "RUN_BENCHER_OPTIONS=--branch ${{ github.event.number }}/PR \
+          --branch-start-point ${{ github.base_ref }} \
+          --branch-start-point-hash ${{ github.event.pull_request.base.sha }} \
+          --branch-reset \
+          --github-actions ${{ secrets.GITHUB_TOKEN }}" >> "$GITHUB_ENV"
       - name: Set bencher opts for main
-        if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+        if: ${{ github.event_name == 'push' && github.ref_name == 'bencher-main' }}
         run: |
-            echo "RUN_BENCHER_OPTIONS=--branch main \
-            --github-actions ${{ secrets.GITHUB_TOKEN }}" >> "$GITHUB_ENV"
+          echo "RUN_BENCHER_OPTIONS=--branch bencher-main \
+          --github-actions ${{ secrets.GITHUB_TOKEN }}" >> "$GITHUB_ENV"
       - name: Set bencher opts for try branch
-        if: ${{ github.event_name == 'push' && github.ref_name == 'try' }}
+        if: ${{ github.event_name == 'push' && github.ref_name == 'bencher-try' }}
         run: |
-            git remote add upstream https://github.com/servo/servo
-            git fetch upstream main
-            echo "RUN_BENCHER_OPTIONS=--branch try \
-            --hash $(git rev-parse HEAD~1) \
-            --branch-start-point main \
-            --branch-start-point-hash $(git merge-base upstream/main HEAD) \
-            --branch-reset" >> "$GITHUB_ENV"
+          git remote add upstream https://github.com/pewsheen/servo
+          git fetch upstream bencher-main
+          echo "RUN_BENCHER_OPTIONS=--branch bencher-try \
+          --hash $(git rev-parse HEAD~1) \
+          --branch-start-point bencher-main \
+          --branch-start-point-hash $(git merge-base upstream/bencher-main HEAD) \
+          --branch-reset" >> "$GITHUB_ENV"
       # we join results and send all data once to have it all in one report
       - name: Send results
         run: |
