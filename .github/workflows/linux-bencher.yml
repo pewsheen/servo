@@ -58,9 +58,11 @@ jobs:
           --branch-start-point ${{ github.base_ref }} \
           --branch-start-point-hash 97419373a122248851b07cfb378e475482ea449c \
           --branch-reset \
-          --threshold-measure latency \
-          --threshold-test percentage \
-          --threshold-upper-boundary 0.25 \
+          --threshold-measure throughput \
+          --threshold-test t_test \
+          --threshold-max-sample-size 64 \
+          --threshold-lower-boundary 0.99 \
+          --threshold-upper-boundary _ \
           --thresholds-reset \
           --github-actions ${{ secrets.GITHUB_TOKEN }}" >> "$GITHUB_ENV"
       - name: Set bencher opts for main
@@ -77,9 +79,11 @@ jobs:
           --hash $(git rev-parse HEAD~1) \
           --branch-start-point bencher-main \
           --branch-start-point-hash 0bab0b9b1e669250078991bf30b7c54db4e4e047 \
-          --threshold-measure latency \
-          --threshold-test percentage \
-          --threshold-upper-boundary 0.25 \
+          --threshold-measure throughput \
+          --threshold-test t_test \
+          --threshold-max-sample-size 64 \
+          --threshold-lower-boundary 0.99 \
+          --threshold-upper-boundary _ \
           --thresholds-reset \
           --branch-reset" >> "$GITHUB_ENV"
       # we join results and send all data once to have it all in one report
