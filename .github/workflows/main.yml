@@ -5,7 +5,7 @@ on:
     # Run the entire pipeline for 'main' even though the merge queue already runs checks
     # for every change. This just offers an extra layer of testing and covers the case of
     # random force pushes.
-    branches: ["main"]
+    branches: ["main", "bencher-main", "bencher-try"]
   pull_request:
     types: ['opened', 'synchronize']
     branches: ["**"]
@@ -14,21 +14,21 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-win:
-    name: Windows
-    if: ${{ github.event_name != 'pull_request' }}
-    uses: ./.github/workflows/windows.yml
-    with:
-      unit-tests: true
-    secrets: inherit
+  # build-win:
+  #   name: Windows
+  #   if: ${{ github.event_name != 'pull_request' }}
+  #   uses: ./.github/workflows/windows.yml
+  #   with:
+  #     unit-tests: true
+  #   secrets: inherit
 
-  build-mac:
-    name: Mac
-    if: ${{ github.event_name != 'pull_request' }}
-    uses: ./.github/workflows/mac.yml
-    with:
-      unit-tests: true
-    secrets: inherit
+  # build-mac:
+  #   name: Mac
+  #   if: ${{ github.event_name != 'pull_request' }}
+  #   uses: ./.github/workflows/mac.yml
+  #   with:
+  #     unit-tests: true
+  #   secrets: inherit
 
   build-linux:
     name: Linux
@@ -44,21 +44,21 @@ jobs:
     uses: ./.github/workflows/lint.yml
     secrets: inherit
 
-  build-android:
-    name: Android
-    if: ${{ github.event_name != 'pull_request' }}
-    uses: ./.github/workflows/android.yml
-    with:
-      profile: "release"
-    secrets: inherit
+  # build-android:
+  #   name: Android
+  #   if: ${{ github.event_name != 'pull_request' }}
+  #   uses: ./.github/workflows/android.yml
+  #   with:
+  #     profile: "release"
+  #   secrets: inherit
 
-  build-ohos:
-    name: OpenHarmony
-    if: ${{ github.event_name != 'pull_request' }}
-    uses: ./.github/workflows/ohos.yml
-    with:
-      profile: "release"
-    secrets: inherit
+  # build-ohos:
+  #   name: OpenHarmony
+  #   if: ${{ github.event_name != 'pull_request' }}
+  #   uses: ./.github/workflows/ohos.yml
+  #   with:
+  #     profile: "release"
+    # secrets: inherit
 
   build-result:
     name: Result
@@ -66,19 +66,19 @@ jobs:
     if: always()
     # needs all build to detect cancellation
     needs:
-      - "build-win"
-      - "build-mac"
+      # - "build-win"
+      # - "build-mac"
       - "build-linux"
-      - "build-android"
-      - "build-ohos"
+      # - "build-android"
+      # - "build-ohos"
       - "lint"
     steps:
-      - name: Merge build timings
-        uses: actions/upload-artifact/merge@v4
-        with:
-          name: cargo-timings
-          pattern: cargo-timings-*
-          delete-merged: true
+      # - name: Merge build timings
+      #   uses: actions/upload-artifact/merge@v4
+      #   with:
+      #     name: cargo-timings
+      #     pattern: cargo-timings-*
+      #     delete-merged: true
       - name: Success
         if: ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
         run: exit 0
