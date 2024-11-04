@@ -56,8 +56,12 @@ jobs:
         run: |
           echo "RUN_BENCHER_OPTIONS=--branch ${{ github.event.number }}/PR \
           --branch-start-point ${{ github.base_ref }} \
-          --branch-start-point-hash ${{ github.event.pull_request.base.sha }} \
+          --branch-start-point-hash 97419373a122248851b07cfb378e475482ea449c \
           --branch-reset \
+          --threshold-measure latency \
+          --threshold-test percentage \
+          --threshold-upper-boundary 0.25 \
+          --thresholds-reset \
           --github-actions ${{ secrets.GITHUB_TOKEN }}" >> "$GITHUB_ENV"
       - name: Set bencher opts for main
         if: ${{ github.event_name == 'push' && github.ref_name == 'bencher-main' }}
@@ -73,6 +77,10 @@ jobs:
           --hash $(git rev-parse HEAD~1) \
           --branch-start-point bencher-main \
           --branch-start-point-hash 0bab0b9b1e669250078991bf30b7c54db4e4e047 \
+          --threshold-measure latency \
+          --threshold-test percentage \
+          --threshold-upper-boundary 0.25 \
+          --thresholds-reset \
           --branch-reset" >> "$GITHUB_ENV"
       # we join results and send all data once to have it all in one report
       - name: Send results
