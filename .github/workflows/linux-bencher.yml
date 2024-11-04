@@ -72,7 +72,7 @@ jobs:
           echo "RUN_BENCHER_OPTIONS=--branch bencher-try \
           --hash $(git rev-parse HEAD~1) \
           --branch-start-point bencher-main \
-          --branch-start-point-hash $(git merge-base upstream/bencher-main HEAD) \
+          --branch-start-point-hash 0bab0b9b1e669250078991bf30b7c54db4e4e047 \
           --branch-reset" >> "$GITHUB_ENV"
       # we join results and send all data once to have it all in one report
       - name: Send results
