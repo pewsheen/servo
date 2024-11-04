@@ -55,8 +55,8 @@ jobs:
         if: github.event_name == 'pull_request_target'
         run: |
           echo "RUN_BENCHER_OPTIONS=--branch ${{ github.event.number }}/PR \
-          --branch-start-point ${{ github.base_ref }} \
-          --branch-start-point-hash 97419373a122248851b07cfb378e475482ea449c \
+          --branch-start-point bencher-main \
+          --branch-start-point-hash 0bab0b9b1e669250078991bf30b7c54db4e4e047 \
           --branch-reset \
           --threshold-measure throughput \
           --threshold-test t_test \
