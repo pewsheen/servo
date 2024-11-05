@@ -55,13 +55,28 @@ jobs:
         if: github.event_name == 'pull_request_target'
         run: |
           echo "RUN_BENCHER_OPTIONS=--branch ${{ github.event.number }}/PR \
-          --branch-start-point bencher-main \
-          --branch-start-point-hash 0bab0b9b1e669250078991bf30b7c54db4e4e047 \
+          --branch-start-point ${{ github.base_ref }} \
+          --branch-start-point-hash ${{ github.event.pull_request.base.sha }} \
           --branch-reset \
+          --threshold-measure latency \
+          --threshold-test t_test \
+          --threshold-max-sample-size 64 \
+          --threshold-lower-boundary _ \
+          --threshold-upper-boundary 0.98 \
           --threshold-measure throughput \
           --threshold-test t_test \
           --threshold-max-sample-size 64 \
-          --threshold-lower-boundary 0.99 \
+          --threshold-lower-boundary _ \
+          --threshold-upper-boundary 0.98 \
+          --threshold-measure file-size \
+          --threshold-test t_test \
+          --threshold-max-sample-size 64 \
+          --threshold-lower-boundary _ \
+          --threshold-upper-boundary 0.98 \
+          --threshold-measure score \
+          --threshold-test t_test \
+          --threshold-max-sample-size 64 \
+          --threshold-lower-boundary 0.98 \
           --threshold-upper-boundary _ \
           --thresholds-reset \
           --github-actions ${{ secrets.GITHUB_TOKEN }}" >> "$GITHUB_ENV"
@@ -79,10 +94,25 @@ jobs:
           --hash $(git rev-parse HEAD~1) \
           --branch-start-point bencher-main \
           --branch-start-point-hash 0bab0b9b1e669250078991bf30b7c54db4e4e047 \
+          --threshold-measure latency \
+          --threshold-test t_test \
+          --threshold-max-sample-size 64 \
+          --threshold-lower-boundary _ \
+          --threshold-upper-boundary 0.98 \
           --threshold-measure throughput \
           --threshold-test t_test \
           --threshold-max-sample-size 64 \
-          --threshold-lower-boundary 0.99 \
+          --threshold-lower-boundary _ \
+          --threshold-upper-boundary 0.98 \
+          --threshold-measure file-size \
+          --threshold-test t_test \
+          --threshold-max-sample-size 64 \
+          --threshold-lower-boundary _ \
+          --threshold-upper-boundary 0.98 \
+          --threshold-measure score \
+          --threshold-test t_test \
+          --threshold-max-sample-size 64 \
+          --threshold-lower-boundary 0.98 \
           --threshold-upper-boundary _ \
           --thresholds-reset \
           --branch-reset" >> "$GITHUB_ENV"
