@@ -121,5 +121,8 @@ jobs:
         run: |
           ./etc/ci/bencher.py merge size.json speedometer.json dromaeo.json --bmf-output b.json
           bencher run --adapter json --file b.json \
-            --project ${{ env.BENCHER_PROJECT }} --token ${{ secrets.BENCHER_API_TOKEN }} --testbed ubuntu-22.04 \
+            --project ${{ env.BENCHER_PROJECT }} --testbed ubuntu-22.04 \
             $RUN_BENCHER_OPTIONS
+      # bencher run --adapter json --file b.json \
+      #   --project ${{ env.BENCHER_PROJECT }} --token ${{ secrets.BENCHER_API_TOKEN }} --testbed ubuntu-22.04 \
+      #   $RUN_BENCHER_OPTIONS
