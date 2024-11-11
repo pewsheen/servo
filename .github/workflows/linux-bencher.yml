@@ -41,7 +41,7 @@ jobs:
           sudo apt update
           sudo apt install -qy --no-install-recommends mesa-vulkan-drivers
           python3 ./mach bootstrap --skip-lints
-      - uses: bencherdev/bencher@main
+      - uses: bencherdev/bencher@v0.4.25
       - name: File size
         run: ./etc/ci/bencher.py filesize target/release/servo --bmf-output size.json
       - name: Speedometer
@@ -91,6 +91,7 @@ jobs:
           git remote add upstream https://github.com/pewsheen/servo
           git fetch upstream bencher-main
           echo "RUN_BENCHER_OPTIONS=--branch bencher-try \
+          --github-actions ${{ secrets.GITHUB_TOKEN }} \
           --hash $(git rev-parse HEAD~1) \
           --branch-start-point bencher-main \
           --branch-start-point-hash 0bab0b9b1e669250078991bf30b7c54db4e4e047 \
@@ -121,8 +122,5 @@ jobs:
         run: |
           ./etc/ci/bencher.py merge size.json speedometer.json dromaeo.json --bmf-output b.json
           bencher run --adapter json --file b.json \
-            --project ${{ env.BENCHER_PROJECT }} --testbed ubuntu-22.04 \
+            --project ${{ env.BENCHER_PROJECT }} --token ${{ secrets.BENCHER_API_TOKEN }} --testbed ubuntu-22.04 \
             $RUN_BENCHER_OPTIONS
-      # bencher run --adapter json --file b.json \
-      #   --project ${{ env.BENCHER_PROJECT }} --token ${{ secrets.BENCHER_API_TOKEN }} --testbed ubuntu-22.04 \
-      #   $RUN_BENCHER_OPTIONS
